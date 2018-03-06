@@ -71,7 +71,7 @@ def B2entries(insts, byear, bmonth, bday, bhour, bmin, bsec, eyear, emonth, eday
         ## ... todo
         
         ## Upload file(s) to draft
-        bucketID=draft_json['links']['files']
+        bucket_id=draft_json['links']['files']
         # client.put_draft_file(bucketID, [ outFile ])
         print(bucket_id)
         
