@@ -30,7 +30,6 @@ def B2entries(insts, byear, bmonth, bday, bhour, bmin, bsec, eyear, emonth, eday
     ## Main loop over Madrigal experiments
     for thisExp in madExps:
 
-        print(thisExp)
         ## Build argument list for EISCATmetadata
         args=[]
         args.append(thisExp.id) # Experiment ID
@@ -53,10 +52,20 @@ def B2entries(insts, byear, bmonth, bday, bhour, bmin, bsec, eyear, emonth, eday
         args.append(None) # Info directory
         
         ## Create metadata
-        metadata_json = EISCATmetadata.MetaDataJSON(args, thisExp.realUrl , config.get('B2','community'), config.get('B2','community_specific'))
+        metadata_json = EISCATmetadata.MetaDataJSON(args, 3, thisExp.realUrl , config.get('B2','community'), config.get('B2','community_specific'))
+
+        # temp workaround: missing schema
+        import json
+        foo=json.loads(metadata_json)
+        foo['community_specific']= {}
+        metadata_json=json.dumps(foo)
+        print(metadata_json)
         
         ## Create B2SHARE draft
         draft_json=client.create_draft(metadata_json)
+        
+        
+        ## check result---
         
         ## get the files: plots, hdf5
         ## ... todo
