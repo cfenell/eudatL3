@@ -8,10 +8,12 @@ def B2entries(insts, byear, bmonth, bday, bhour, bmin, bsec, eyear, emonth, eday
     from B2SHAREClient import EISCATmetadata, B2SHAREClient
     import madrigalWeb.madrigalWeb as mw
     import datetime
+    from os import path
         
     ## Read config
     config=SafeConfigParser(inline_comment_prefixes={'#'})
     config.read('/usr/local/etc/eudatL2.conf')        
+    tmpdir=config.get('Main','tempDir')
     madurl=config.get('Madrigal','URL')
     
     ## Open Madrigal connection
@@ -54,24 +56,29 @@ def B2entries(insts, byear, bmonth, bday, bhour, bmin, bsec, eyear, emonth, eday
         ## Create metadata
         metadata_json = EISCATmetadata.MetaDataJSON(args, 3, thisExp.realUrl , config.get('B2','community'), config.get('B2','community_specific'))
 
-        # temp workaround: missing schema
+        ## --- remove me - workaround for missing schema in test instance !! --
         import json
         foo=json.loads(metadata_json)
-        foo['community_specific']= {}
+        foo['community_specific']={}
         metadata_json=json.dumps(foo)
-        print(metadata_json)
+        ## ---
         
         ## Create B2SHARE draft
         draft_json=client.create_draft(metadata_json)
-        
-        
-        ## check result---
+        bucket_id=draft_json['links']['files']
         
         ## get the files: plots, hdf5
-        ## ... todo
+        expFiles=madData.getExperimentFiles(thisExp.id)
+
+        for expFile in expFiles:
+
+            outFile=path.join(tmpdir, path.basename(expFile.name))
+            
+            madData.downloadFile(expFile.name, outFile, 'B2Share client', 'b2@eiscat.se', 'EISCAT Scientific Association', format='hdf5')
+            
+            ## Upload file(s) to draft
+
+            client.put_draft_file(bucket_id, [ outFile ])
+
         
-        ## Upload file(s) to draft
-        bucket_id=draft_json['links']['files']
-        # client.put_draft_file(bucketID, [ outFile ])
-        print(bucket_id)
         
