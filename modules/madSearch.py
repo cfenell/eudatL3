@@ -58,7 +58,6 @@ def B2entries(insts, byear, bmonth, bday, bhour, bmin, bsec, eyear, emonth, eday
         
         ## Create B2SHARE draft
         draft_json=client.create_draft(metadata_json)
-        bucket_id=draft_json['links']['files']
         
         ## get the files: plots, hdf5
         expFiles=madData.getExperimentFiles(thisExp.id)
@@ -69,7 +68,7 @@ def B2entries(insts, byear, bmonth, bday, bhour, bmin, bsec, eyear, emonth, eday
                 outFile=path.join(tmpdir, path.splitext(path.basename(expFile.name))[0] + '.hdf5')
             
                 madData.downloadFile(expFile.name, outFile, 'B2Share client', 'b2@eiscat.se', 'EISCAT Scientific Association', format='hdf5')
-                client.put_draft_file(bucket_id, [ outFile ])
+                client.put_draft_file(draft_json, [ outFile ])
 
         
         
