@@ -71,8 +71,13 @@ def B2entries(insts, byear, bmonth, bday, bhour, bmin, bsec, eyear, emonth, eday
                 madData.downloadFile(expFile.name, outFile, 'B2Share client', 'b2@eiscat.se', 'EISCAT Scientific Association', format='hdf5')
                 client.put_draft_file(draft_json, [ outFile ])
 
-                #Todo: here draft metadata should be updated with the parameters
+                # Add the parameters
+                expPars=madData.getExperimentFileParameters(expFile.name)
+                param_json_patch=EISCATmetadata.ParamJSONpatch(expPars, config.get('B2','community_specific'))
 
+                # todo: debug this patch
+                client.update_draft(draft_json, param_json_patch)
+                
         ## Add plots
         # Build true experiment URL
         expurl=thisExp.url
