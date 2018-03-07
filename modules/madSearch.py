@@ -65,13 +65,11 @@ def B2entries(insts, byear, bmonth, bday, bhour, bmin, bsec, eyear, emonth, eday
 
         for expFile in expFiles:
 
-            outFile=path.join(tmpdir, path.basename(expFile.name))
+            if expFile.category==1:
+                outFile=path.join(tmpdir, path.splitext(path.basename(expFile.name))[0] + '.hdf5')
             
-            madData.downloadFile(expFile.name, outFile, 'B2Share client', 'b2@eiscat.se', 'EISCAT Scientific Association', format='hdf5')
-            
-            ## Upload file(s) to draft
-
-            client.put_draft_file(bucket_id, [ outFile ])
+                madData.downloadFile(expFile.name, outFile, 'B2Share client', 'b2@eiscat.se', 'EISCAT Scientific Association', format='hdf5')
+                client.put_draft_file(bucket_id, [ outFile ])
 
         
         
