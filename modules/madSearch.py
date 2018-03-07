@@ -55,13 +55,6 @@ def B2entries(insts, byear, bmonth, bday, bhour, bmin, bsec, eyear, emonth, eday
         
         ## Create metadata
         metadata_json = EISCATmetadata.MetaDataJSON(args, 3, thisExp.realUrl , config.get('B2','community'), config.get('B2','community_specific'))
-
-        ## --- remove me - workaround for missing schema in test instance !! --
-        import json
-        foo=json.loads(metadata_json)
-        foo['community_specific']={}
-        metadata_json=json.dumps(foo)
-        ## ---
         
         ## Create B2SHARE draft
         draft_json=client.create_draft(metadata_json)
