@@ -7,8 +7,9 @@ def B2entries(insts, byear, bmonth, bday, bhour, bmin, bsec, eyear, emonth, eday
     from configparser import SafeConfigParser
     from B2SHAREClient import EISCATmetadata, B2SHAREClient
     import madrigalWeb.madrigalWeb as mw
+    import madPlots
     import datetime
-    from os import path
+    from os import path, scandir, unlink
         
     ## Read config
     config=SafeConfigParser(inline_comment_prefixes={'#'})
@@ -59,7 +60,7 @@ def B2entries(insts, byear, bmonth, bday, bhour, bmin, bsec, eyear, emonth, eday
         ## Create B2SHARE draft
         draft_json=client.create_draft(metadata_json)
         
-        ## get the files: plots, hdf5
+        ## get the list of NCAR files
         expFiles=madData.getExperimentFiles(thisExp.id)
 
         for expFile in expFiles:
@@ -70,5 +71,24 @@ def B2entries(insts, byear, bmonth, bday, bhour, bmin, bsec, eyear, emonth, eday
                 madData.downloadFile(expFile.name, outFile, 'B2Share client', 'b2@eiscat.se', 'EISCAT Scientific Association', format='hdf5')
                 client.put_draft_file(draft_json, [ outFile ])
 
+                #Todo: here draft metadata should be updated with the parameters
+
+        ## Add plots
+        # Build true experiment URL
+        expurl=thisExp.url
+        if(expurl.find('cgi-bin/madtoc') > 0):
+            expurl=expurl.replace('cgi-bin/madtoc/','')
+                    
         
+        plotFiles=madPlots.get_plots(expurl, tmpdir)
+
+        
+        if(len(plotFiles)>0):
+            client.put_draft_file(draft_json, plotFiles)       
+
+
+        ## Clean up temp dir
+        for tmpfile in scandir(tmpdir):
+            unlink(tmpfile.path)
+    
         
