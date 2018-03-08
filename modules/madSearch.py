@@ -13,7 +13,7 @@ def B2entries(insts, byear, bmonth, bday, bhour, bmin, bsec, eyear, emonth, eday
         
     ## Read config
     config=SafeConfigParser(inline_comment_prefixes={'#'})
-    config.read('/usr/local/etc/eudatL2.conf')        
+    config.read('/usr/local/etc/eudat.conf')        
     tmpdir=config.get('Main','tempDir')
     madurl=config.get('Madrigal','URL')
     
@@ -83,14 +83,10 @@ def B2entries(insts, byear, bmonth, bday, bhour, bmin, bsec, eyear, emonth, eday
         expurl=thisExp.url
         if(expurl.find('cgi-bin/madtoc') > 0):
             expurl=expurl.replace('cgi-bin/madtoc/','')
-                    
-        
-        plotFiles=madPlots.get_plots(expurl, tmpdir)
-
-        
+            
+        plotFiles=madPlots.get_plots(expurl, tmpdir)        
         if(len(plotFiles)>0):
             client.put_draft_file(draft_json, plotFiles)       
-
 
         ## Clean up temp dir
         for tmpfile in scandir(tmpdir):
