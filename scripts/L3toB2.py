@@ -62,8 +62,6 @@ if __name__ == '__main__':
     # Todo: change me to logging                                
     print("Creating B2SHARE records for instruments :" + str(instrumentList)),
     
-
-
     ### Call Madrigal-B2SHARE routine
     b2create=B2entries(instrumentList, startTime.tm_year, startTime.tm_mon, startTime.tm_mday, startTime.tm_hour, startTime.tm_min, startTime.tm_sec, endTime.tm_year, endTime.tm_mon, endTime.tm_mday, endTime.tm_hour, endTime.tm_min, endTime.tm_sec)
 

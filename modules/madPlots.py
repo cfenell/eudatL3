@@ -1,6 +1,8 @@
-# List and retrieve plots from Madrigal exp directory.
-# Code adapted from'
+# List and retrieve plots from a Madrigal experiment directory.
+# Code adapted from:
 # https://stackoverflow.com/questions/11023530/python-to-list-http-files-and-directories
+# Requirement: python3-bs4
+
 import requests
 from bs4 import BeautifulSoup
 from os import path

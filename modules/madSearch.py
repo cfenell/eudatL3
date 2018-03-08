@@ -74,7 +74,7 @@ def B2entries(insts, byear, bmonth, bday, bhour, bmin, bsec, eyear, emonth, eday
                 # Add the parameters
                 expPars=madData.getExperimentFileParameters(expFile.name)
                 param_json_patch=EISCATmetadata.ParamJSONpatch(expPars, config.get('B2','community_specific'))
-
+              
                 # todo: debug this patch
                 client.update_draft(draft_json, param_json_patch)
                 
